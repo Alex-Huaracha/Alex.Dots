@@ -150,7 +150,7 @@ install_zsh_plugins() {
 install_node() {
     if command_exists fnm; then
         info "Installing Node.js LTS via fnm..."
-        eval "$(fnm env)"
+        eval "$(fnm env --shell bash)"
         fnm install --lts
         fnm default lts-latest
         success "Node.js LTS installed"
@@ -194,6 +194,11 @@ create_symlinks() {
     backup_if_exists "$HOME/.gitconfig.local"
     ln -sf "$DOTFILES_DIR/config/git/.gitconfig.local" "$HOME/.gitconfig.local"
     success "Linked .gitconfig.local"
+
+    # ~/.config/nvim
+    backup_if_exists "$HOME/.config/nvim"
+    ln -sf "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
+    success "Linked nvim"
 }
 
 # ============================================
