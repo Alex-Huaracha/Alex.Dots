@@ -5,38 +5,122 @@
 # ============================================
 
 # Timeout for commands (ms)
-command_timeout = 1000
+command_timeout = 3600000
 
 # Newline between prompts
 add_newline = true
 
+# Palette
+palette = "catppuccin_mocha"
+
 # ============================================
 # Prompt Format
 # ============================================
-format = """
-$directory\
+format = """\
+($directory)\
+$os\
 $git_branch\
 $git_status\
+$fill\
 $nodejs\
-$line_break\
-$character"""
+$rust\
+$golang\
+$php\
+$bun\
+$java\
+$c\
+$conda\
+$zig\
+$cmd_duration\
+$time\
+\n$character\
+"""
+# ============================================
+# Palette Catpuccin mocha
+# ============================================
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
+
+# ============================================
+# Character (prompt symbol)
+# ============================================
+[character]
+success_symbol = "[ ](fg:green)"
+error_symbol = "[ ](fg:red)"
+vimcmd_symbol = "[N](bold red)"
+vimcmd_replace_one_symbol = "[R](bold peach)"
+vimcmd_visual_symbol = "[V](bold mauve)"
+
+# ============================================
+# username 
+# ============================================
+[username]
+style_user = 'bold blue'
+style_root = 'bold red'
+format = '[󱗞 $user](fg:$style) '
+disabled = false
+show_always = true
 
 # ============================================
 # Directory
 # ============================================
 [directory]
-truncation_length = 3
+format = "[$path](bold $style)[$read_only]($read_only_style) "
+truncation_length = 2
+style = "fg:blue"
+read_only_style = "fg:blue"
+before_repo_root_style = "fg:blue"
+truncation_symbol = "…/"
 truncate_to_repo = true
-style = "bold cyan"
-format = "[$path]($style)[$read_only]($read_only_style) "
+read_only = "  "
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+#"work" = " "
+
+# ============================================
+# cmd Duration
+# ============================================
+[cmd_duration]
+format = " took [ $duration]($style) "
+style = "bold fg:yellow"
+min_time = 500
 
 # ============================================
 # Git Branch
 # ============================================
 [git_branch]
-symbol = " "
-style = "bold purple"
-format = "on [$symbol$branch]($style) "
+format = "-> [$symbol$branch]($style) "
+style = "bold fg:mauve"
+symbol = " "
 
 # ============================================
 # Git Status
@@ -56,21 +140,21 @@ renamed = "»${count}"
 deleted = "x${count}"
 
 # ============================================
-# Node.js
+# Modules
 # ============================================
+[bun]
+version_format = "$raw"
+format = '[[ $symbol ($version) ](fg:text)]($style)'
+disabled = false
+
 [nodejs]
 symbol = " "
-style = "bold green"
-format = "[$symbol($version)]($style) "
-detect_files = ["package.json", ".node-version", ".nvmrc"]
-detect_folders = ["node_modules"]
+format = '[[ $symbol ($version) ](fg:green)]($style)'
 
-# ============================================
-# Character (prompt symbol)
-# ============================================
-[character]
-success_symbol = "[>](bold green)"
-error_symbol = "[>](bold red)"
+[time]
+disabled = false
+time_format = "%R"
+format = '[[   $time ](fg:subtext0)]($style)'
 
 # ============================================
 # Disabled Modules (for performance)
