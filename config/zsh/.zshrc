@@ -68,7 +68,7 @@ setopt HIST_REDUCE_BLANKS     # Remove unnecessary blanks
 # Zsh Options
 # ============================================
 setopt AUTO_CD                # cd by typing directory name
-setopt CORRECT                # Spell correction for commands
+# setopt CORRECT                # Spell correction for commands (desactivado)
 setopt COMPLETE_IN_WORD       # Complete from both ends of word
 setopt ALWAYS_TO_END          # Move cursor to end after completion
 
