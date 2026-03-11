@@ -43,6 +43,24 @@ require("lazy").setup({
     -- Import any extra modules here
     -- Editor plugins
     { import = "lazyvim.plugins.extras.editor.snacks_picker" },
+
+    -- Formatting plugins
+    { import = "lazyvim.plugins.extras.formatting.biome" },
+    { import = "lazyvim.plugins.extras.formatting.prettier" },
+
+    -- Linting plugins
+    { import = "lazyvim.plugins.extras.linting.eslint" },
+
+    -- Language support plugins
+    { import = "lazyvim.plugins.extras.lang.json" },
+    { import = "lazyvim.plugins.extras.lang.markdown" },
+    { import = "lazyvim.plugins.extras.lang.typescript" },
+
+    -- Coding plugins
+    { import = "lazyvim.plugins.extras.coding.mini-surround" },
+    { import = "lazyvim.plugins.extras.editor.mini-diff" },
+    { import = "lazyvim.plugins.extras.coding.blink" },
+
     -- import/override with your plugins
     { import = "plugins" },
   },
