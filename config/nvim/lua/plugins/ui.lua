@@ -61,6 +61,10 @@ return {
     end,
   },
 
+  -- Plugin: folke/snacks.nvim
+  -- URL: https://github.com/folke/snacks.nvim
+  -- Description: Collection of small QoL plugins for Neovim
+  -- Configured for elegant UI with minimal visual noise
   {
     "folke/snacks.nvim",
     opts = {
