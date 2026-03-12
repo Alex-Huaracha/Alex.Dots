@@ -33,6 +33,23 @@ return {
 
   {
     "nvim-lualine/lualine.nvim",
+    opts = {
+      options = {
+        theme = "onedark",
+        component_separators = { left = "|", right = "|" },
+        section_separators = { left = "", right = "" },
+      },
+      sections = {
+        lualine_a = { { "mode", separator = { left = "", right = "" }, right_padding = 2 } },
+        lualine_b = { "branch", "filename" },
+        lualine_c = {},
+        lualine_x = {},
+        lualine_y = { "encoding", "diff", "diagnostics", "filetype", "progress" },
+        lualine_z = {
+          { "datetime", separator = { left = "", right = "" }, right_padding = 2, style = "%H:%M" },
+        },
+      },
+    },
   },
 
   -- Plugin: incline.nvim
