@@ -20,3 +20,6 @@ brew "git"
 # Search tools (useful for editors like nvim)
 brew "ripgrep"
 brew "fd"
+
+# Terminal multiplexer
+brew "tmux"
