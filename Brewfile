@@ -16,6 +16,7 @@ brew "fnm"
 
 # Version control
 brew "git"
+brew "lazygit"
 
 # Search tools (useful for editors like nvim)
 brew "ripgrep"

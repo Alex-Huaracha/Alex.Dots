@@ -1,0 +1,10 @@
+# Theme (TODO: add color scheme)
+gui:
+  theme:
+    activeBorderColor:
+      - green
+      - bold
+    inactiveBorderColor:
+      - white
+    selectedLineBgColor:
+      - default

@@ -228,6 +228,12 @@ create_symlinks() {
     backup_if_exists "$HOME/.config/tmux/keybindings.conf"
     ln -sf "$DOTFILES_DIR/config/tmux/keybindings.conf" "$HOME/.config/tmux/keybindings.conf"
     success "Linked tmux config"
+
+    # ~/.config/lazygit
+    mkdir -p "$HOME/.config/lazygit"
+    backup_if_exists "$HOME/.config/lazygit/config.yml"
+    ln -sf "$DOTFILES_DIR/config/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
+    success "Linked lazygit config"
 }
 
 # ============================================
