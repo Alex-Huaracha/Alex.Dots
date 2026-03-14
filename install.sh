@@ -221,11 +221,13 @@ create_symlinks() {
     ln -sf "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
     success "Linked nvim"
 
-    # ~/.config/tmux/tmux.conf
+    # ~/.config/tmux
     mkdir -p "$HOME/.config/tmux"
     backup_if_exists "$HOME/.config/tmux/tmux.conf"
     ln -sf "$DOTFILES_DIR/config/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
-    success "Linked tmux.conf"
+    backup_if_exists "$HOME/.config/tmux/keybindings.conf"
+    ln -sf "$DOTFILES_DIR/config/tmux/keybindings.conf" "$HOME/.config/tmux/keybindings.conf"
+    success "Linked tmux config"
 }
 
 # ============================================

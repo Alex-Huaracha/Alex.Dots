@@ -1,9 +1,3 @@
-# ============================================
-# Alex.Dots - Starship Prompt Configuration
-# ============================================
-# Documentation: https://starship.rs/config/
-# ============================================
-
 # Timeout for commands (ms)
 command_timeout = 3600000
 
@@ -13,9 +7,7 @@ add_newline = true
 # Palette
 palette = "catppuccin_mocha"
 
-# ============================================
 # Prompt Format
-# ============================================
 format = """\
 ($directory)\
 $os\
@@ -36,15 +28,10 @@ $time\
 \n$character\
 """
 
-# ============================================
-# Fill
-# ============================================
 [fill]
 symbol = ' '
 
-# ============================================
 # Palette Catpuccin mocha
-# ============================================
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
 flamingo = "#f2cdcd"
@@ -73,9 +60,7 @@ base = "#1e1e2e"
 mantle = "#181825"
 crust = "#11111b"
 
-# ============================================
 # Character (prompt symbol)
-# ============================================
 [character]
 success_symbol = "[ ](fg:green)"
 error_symbol = "[ ](fg:red)"
@@ -83,9 +68,6 @@ vimcmd_symbol = "[N](bold red)"
 vimcmd_replace_one_symbol = "[R](bold peach)"
 vimcmd_visual_symbol = "[V](bold mauve)"
 
-# ============================================
-# username 
-# ============================================
 [username]
 style_user = 'bold blue'
 style_root = 'bold red'
@@ -93,9 +75,6 @@ format = '[󱗞 $user](fg:$style) '
 disabled = false
 show_always = true
 
-# ============================================
-# Directory
-# ============================================
 [directory]
 format = "[$path](bold $style)[$read_only]($read_only_style) "
 truncation_length = 2
@@ -113,25 +92,16 @@ read_only = "  "
 "Pictures" = " "
 #"work" = " "
 
-# ============================================
-# cmd Duration
-# ============================================
 [cmd_duration]
 format = " took [ $duration]($style) "
 style = "bold fg:yellow"
 min_time = 500
 
-# ============================================
-# Git Branch
-# ============================================
 [git_branch]
 format = "-> [$symbol$branch]($style) "
 style = "bold fg:mauve"
 symbol = " "
 
-# ============================================
-# Git Status
-# ============================================
 [git_status]
 style = "bold red"
 format = '([$all_status$ahead_behind]($style) )'
@@ -146,9 +116,6 @@ staged = "+${count}"
 renamed = "»${count}"
 deleted = "x${count}"
 
-# ============================================
-# Modules
-# ============================================
 [bun]
 version_format = "$raw"
 format = '[[ $symbol ($version) ](fg:text)]($style)'
@@ -163,9 +130,7 @@ disabled = false
 time_format = "%R"
 format = '[[   $time ](fg:subtext0)]($style)'
 
-# ============================================
-# Disabled Modules (for performance)
-# ============================================
+# Disabled modules (for performance)
 [aws]
 disabled = true
 
