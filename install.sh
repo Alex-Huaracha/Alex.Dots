@@ -73,7 +73,7 @@ show_banner() {
     echo -e "${BOLD}${BLUE}"
     echo "  ╔═══════════════════════════════════════╗"
     echo "  ║         Alex.Dots Installer           ║"
-    echo "  ║     Zsh + Starship + fnm + Git        ║"
+    echo "  ║   Zsh + Starship + Tmux + fnm + Git   ║"
     echo "  ╚═══════════════════════════════════════╝"
     echo -e "${NC}"
 }
@@ -145,6 +145,27 @@ install_zsh_plugins() {
 }
 
 # ============================================
+# Install TPM (Tmux Plugin Manager)
+# ============================================
+install_tpm() {
+    local TPM_DIR="$HOME/.tmux/plugins/tpm"
+    if [[ -d "$TPM_DIR" ]]; then
+        success "TPM already installed"
+    else
+        info "Installing TPM (Tmux Plugin Manager)..."
+        git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+        success "TPM installed"
+    fi
+
+    # Install tmux plugins automatically
+    if [[ -x "$TPM_DIR/bin/install_plugins" ]]; then
+        info "Installing tmux plugins..."
+        "$TPM_DIR/bin/install_plugins"
+        success "Tmux plugins installed"
+    fi
+}
+
+# ============================================
 # Install Node.js LTS via fnm
 # ============================================
 install_node() {
@@ -199,6 +220,12 @@ create_symlinks() {
     backup_if_exists "$HOME/.config/nvim"
     ln -sf "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
     success "Linked nvim"
+
+    # ~/.config/tmux/tmux.conf
+    mkdir -p "$HOME/.config/tmux"
+    backup_if_exists "$HOME/.config/tmux/tmux.conf"
+    ln -sf "$DOTFILES_DIR/config/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
+    success "Linked tmux.conf"
 }
 
 # ============================================
@@ -273,6 +300,7 @@ show_summary() {
     echo "  - Homebrew (package manager)"
     echo "  - Zsh (shell) + plugins"
     echo "  - Starship (prompt)"
+    echo "  - Tmux + TPM (plugin manager)"
     echo "  - fnm (Node version manager)"
     echo "  - Node.js LTS"
     echo "  - Git"
@@ -280,6 +308,7 @@ show_summary() {
     echo "Symlinks created:"
     echo "  - ~/.zshrc -> $DOTFILES_DIR/config/zsh/.zshrc"
     echo "  - ~/.config/starship.toml -> $DOTFILES_DIR/config/starship/starship.toml"
+    echo "  - ~/.config/tmux/tmux.conf -> $DOTFILES_DIR/config/tmux/tmux.conf"
     echo "  - ~/.gitconfig.local -> $DOTFILES_DIR/config/git/.gitconfig.local"
     echo ""
     echo "Files created:"
@@ -298,6 +327,7 @@ main() {
     install_homebrew
     install_packages
     install_zsh_plugins
+    install_tpm
     install_node
     create_symlinks
     configure_git
