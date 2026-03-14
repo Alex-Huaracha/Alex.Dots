@@ -234,6 +234,11 @@ create_symlinks() {
     backup_if_exists "$HOME/.config/lazygit/config.yml"
     ln -sf "$DOTFILES_DIR/config/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
     success "Linked lazygit config"
+
+    # ~/.wezterm.lua
+    backup_if_exists "$HOME/.wezterm.lua"
+    ln -sf "$DOTFILES_DIR/config/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+    success "Linked wezterm.lua"
 }
 
 # ============================================
@@ -318,6 +323,7 @@ show_summary() {
     echo "  - ~/.config/starship.toml -> $DOTFILES_DIR/config/starship/starship.toml"
     echo "  - ~/.config/tmux/tmux.conf -> $DOTFILES_DIR/config/tmux/tmux.conf"
     echo "  - ~/.gitconfig.local -> $DOTFILES_DIR/config/git/.gitconfig.local"
+    echo "  - ~/.wezterm.lua -> $DOTFILES_DIR/config/wezterm/wezterm.lua"
     echo ""
     echo "Files created:"
     echo "  - ~/.gitconfig (includes ~/.gitconfig.local)"
