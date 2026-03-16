@@ -17,7 +17,8 @@ config.font_size = 11.0
 -- │                                  WINDOW                                      │
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
-config.window_background_opacity = 0.95
+-- config.window_background_opacity = 0.95
+config.window_background_opacity = 0.60
 config.macos_window_background_blur = 20
 config.win32_system_backdrop = "Acrylic"
 
