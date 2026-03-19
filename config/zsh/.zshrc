@@ -92,9 +92,10 @@ alias glog="git log --oneline --graph --decorate"
 # -------------------------------------------
 # Aliases - General
 # -------------------------------------------
-alias ll="ls -la"
-alias la="ls -A"
-alias l="ls -CF"
+alias ls="ls --color=auto"
+alias ll="ls -la --color=auto"
+alias la="ls -A --color=auto"
+alias l="ls -CF --color=auto"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
