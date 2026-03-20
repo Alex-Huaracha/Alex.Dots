@@ -124,3 +124,6 @@ fi
 
 # opencode
 export PATH=/home/alex/.opencode/bin:$PATH
+
+# Claude Code
+export PATH="$HOME/.local/bin:$PATH"
