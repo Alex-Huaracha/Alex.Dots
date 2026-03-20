@@ -18,6 +18,9 @@ brew "fnm"
 brew "git"
 brew "lazygit"
 
+# JSON processor
+brew "jq"
+
 # Search tools (useful for editors like nvim)
 brew "ripgrep"
 brew "fd"
