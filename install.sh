@@ -239,6 +239,14 @@ create_symlinks() {
     backup_if_exists "$HOME/.wezterm.lua"
     ln -sf "$DOTFILES_DIR/config/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
     success "Linked wezterm.lua"
+
+    # ~/.claude (Claude Code)
+    mkdir -p "$HOME/.claude"
+    backup_if_exists "$HOME/.claude/settings.json"
+    ln -sf "$DOTFILES_DIR/config/claude-code/settings.json" "$HOME/.claude/settings.json"
+    backup_if_exists "$HOME/.claude/statusline.sh"
+    ln -sf "$DOTFILES_DIR/config/claude-code/statusline.sh" "$HOME/.claude/statusline.sh"
+    success "Linked Claude Code config"
 }
 
 # ============================================
