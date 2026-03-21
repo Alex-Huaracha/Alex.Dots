@@ -1,10 +1,40 @@
-# Theme (TODO: add color scheme)
 gui:
+  nerdFontsVersion: "3"
+  scrollPastBottom: false
+  border: "rounded"
+  sidePanelWidth: 0.25
+  expandFocusedSidePanel: true
+  commitLength:
+    show: true
+  showNumstatInFilesView: true
+  # commandLogSize: 8
+  statusPanelView: allBranchesLog
+
+  branchColors:
+    "feature": "#a6e3a1"
+    "hotfix": "#f38ba8"
+    "release": "#f9e2af"
+    "bugfix": "#fab387"
+    "fix": "#fab387"
+    "chore": "#89b4fa"
+
   theme:
     activeBorderColor:
-      - green
+      - "#a6e3a1"
       - bold
     inactiveBorderColor:
-      - white
+      - "#a6adc8"
+    optionsTextColor:
+      - "#89b4fa"
     selectedLineBgColor:
-      - default
+      - "#313244"
+    cherryPickedCommitBgColor:
+      - "#45475a"
+    cherryPickedCommitFgColor:
+      - "#a6e3a1"
+    unstagedChangesColor:
+      - "#f38ba8"
+    defaultFgColor:
+      - "#cdd6f4"
+    searchingActiveBorderColor:
+      - "#f9e2af"
