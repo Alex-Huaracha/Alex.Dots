@@ -246,6 +246,8 @@ create_symlinks() {
     ln -sf "$DOTFILES_DIR/config/claude-code/settings.json" "$HOME/.claude/settings.json"
     backup_if_exists "$HOME/.claude/statusline.sh"
     ln -sf "$DOTFILES_DIR/config/claude-code/statusline.sh" "$HOME/.claude/statusline.sh"
+    backup_if_exists "$HOME/.claude/CLAUDE.md"
+    ln -sf "$DOTFILES_DIR/config/claude-code/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
     success "Linked Claude Code config"
 }
 
