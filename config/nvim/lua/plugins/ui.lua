@@ -1,4 +1,13 @@
 return {
+  {
+    "folke/noice.nvim",
+    opts = {
+      presets = {
+        lsp_doc_border = true,
+      },
+    },
+  },
+
   -- Plugin: folke/todo-comments.nvim
   -- URL: https://github.com/folke/todo-comments.nvim
   -- Description: Plugin to highlight and search for TODO, FIX, HACK, etc. comments in your code.
