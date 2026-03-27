@@ -4,17 +4,17 @@
 # Claude Code Statusline - Alex.Dots
 # ============================================
 # Receives JSON via stdin from Claude Code
-# Renders: model | dir | lines | context bar + cache details
+# Renders: dir | lines | model | context bar + cache details
 # ============================================
 
 # Colors (ANSI 256)
-ACCENT='\033[38;5;179m'       # dorado/ámbar
-SECONDARY='\033[38;5;146m'    # azul gris
-MUTED='\033[38;5;242m'        # gris
-SUCCESS='\033[38;5;150m'      # verde
-ERROR='\033[38;5;174m'        # rosa/rojo
-COBALT='\033[38;5;75m'        # azul cobalto claro (Blade Liger)
-WHITE='\033[38;5;252m'        # blanco/gris claro
+ACCENT='\033[38;5;179m'    # dorado/ámbar
+SECONDARY='\033[38;5;146m' # azul gris
+MUTED='\033[38;5;242m'     # gris
+SUCCESS='\033[38;5;150m'   # verde
+ERROR='\033[38;5;174m'     # rosa/rojo
+COBALT='\033[38;5;75m'     # azul cobalto claro (Blade Liger)
+WHITE='\033[38;5;252m'     # blanco/gris claro
 BOLD='\033[1m'
 NC='\033[0m'
 
@@ -25,21 +25,16 @@ eval "$(echo "$input" | jq -r '
   @sh "DIR=\(.workspace.current_dir // "~")",
   @sh "ADDED=\(.cost.total_lines_added // 0)",
   @sh "REMOVED=\(.cost.total_lines_removed // 0)",
+  @sh "CTX_PERCENT=\(.context_window.used_percentage // 0 | floor)",
   @sh "CTX_SIZE=\(.context_window.context_window_size // 200000)",
-  @sh "INPUT_TOKENS=\(.context_window.current_usage.input_tokens // 0)",
-  @sh "CACHE_CREATE=\(.context_window.current_usage.cache_creation_input_tokens // 0)",
-  @sh "CACHE_READ=\(.context_window.current_usage.cache_read_input_tokens // 0)"
+  @sh "TOTAL_USED=\((.context_window.current_usage.input_tokens // 0) + (.context_window.current_usage.cache_creation_input_tokens // 0) + (.context_window.current_usage.cache_read_input_tokens // 0))",
+  @sh "RATE_5H=\(.rate_limits.five_hour.used_percentage // 0 | floor)",
+  @sh "RATE_5H_RESET=\(.rate_limits.five_hour.resets_at // 0)"
 ')"
 
-# Context percentage
-TOTAL_USED=$((INPUT_TOKENS + CACHE_CREATE + CACHE_READ))
-if [ "$CTX_SIZE" -gt 0 ] 2>/dev/null; then
-  CTX_PERCENT=$((TOTAL_USED * 100 / CTX_SIZE))
-else
-  CTX_PERCENT=0
-fi
-[ "$CTX_PERCENT" -gt 100 ] && CTX_PERCENT=100
-[ "$CTX_PERCENT" -lt 0 ] && CTX_PERCENT=0
+# Clamp context percentage
+[ "$CTX_PERCENT" -gt 100 ] 2>/dev/null && CTX_PERCENT=100
+[ "$CTX_PERCENT" -lt 0 ] 2>/dev/null && CTX_PERCENT=0
 
 # Format tokens to human readable (1000 -> 1k, 1000000 -> 1M)
 fmt_tokens() {
@@ -55,15 +50,14 @@ fmt_tokens() {
 
 USED_FMT=$(fmt_tokens "$TOTAL_USED")
 SIZE_FMT=$(fmt_tokens "$CTX_SIZE")
-CACHE_READ_FMT=$(fmt_tokens "$CACHE_READ")
-CACHE_CREATE_FMT=$(fmt_tokens "$CACHE_CREATE")
 
 # Clean model name (remove context info like "1M context")
 MODEL=$(echo "$MODEL" | sed 's/ *([^)]*context)//g')
 
 # Progress bar with color based on usage
-BAR_WIDTH=8
+BAR_WIDTH=10
 FILLED=$((CTX_PERCENT * BAR_WIDTH / 100))
+[ "$CTX_PERCENT" -gt 0 ] && [ "$FILLED" -eq 0 ] && FILLED=1
 EMPTY=$((BAR_WIDTH - FILLED))
 
 if [ "$CTX_PERCENT" -ge 80 ]; then
@@ -71,29 +65,57 @@ if [ "$CTX_PERCENT" -ge 80 ]; then
 elif [ "$CTX_PERCENT" -ge 50 ]; then
   BAR_COLOR="$ACCENT"
 else
-  BAR_COLOR="$ACCENT"
+  BAR_COLOR="$WHITE"
 fi
 
-BAR="${BAR_COLOR}["
-for ((i=0; i<FILLED; i++)); do BAR+="="; done
-for ((i=0; i<EMPTY; i++)); do BAR+="."; done
-BAR+="]${NC}"
+BAR=""
+[ "$FILLED" -gt 0 ] && printf -v FILL "%${FILLED}s" && BAR="${BAR_COLOR}${FILL// /▓}"
+[ "$EMPTY" -gt 0 ] && printf -v PAD "%${EMPTY}s" && BAR+="${MUTED}${PAD// /░}"
+BAR+="${NC}"
 
 # Directory name (basename only)
 DIR_NAME=$(basename "$DIR")
 
+# Git branch (if inside a repo)
+GIT_BRANCH=$(git -C "$DIR" rev-parse --abbrev-ref HEAD 2>/dev/null)
+
 # Separator
-SEP="${MUTED}  ${NC}"
+SEP=" ${SECONDARY}|${NC} "
 
 # Build status line
-LINE="${BOLD}${WHITE}[${MODEL}]${NC}"
+LINE="${COBALT}  ${DIR_NAME}${NC}"
 LINE+="${SEP}"
-LINE+="${COBALT}󰉋 ${DIR_NAME}${NC}"
+if [ -n "$GIT_BRANCH" ]; then
+  LINE+="${ACCENT} ${GIT_BRANCH}${NC}"
+  if [ "$ADDED" -gt 0 ] || [ "$REMOVED" -gt 0 ]; then
+    LINE+=" ${SUCCESS}+${ADDED}${NC} ${ERROR}-${REMOVED}${NC}"
+  fi
+else
+  if [ "$ADDED" -gt 0 ] || [ "$REMOVED" -gt 0 ]; then
+    LINE+="${SUCCESS}+${ADDED}${NC} ${ERROR}-${REMOVED}${NC}"
+  fi
+fi
 LINE+="${SEP}"
-LINE+="${SUCCESS}+${ADDED}${NC} ${ERROR}-${REMOVED}${NC}"
+LINE+="${WHITE}󱚤  ${MODEL}${NC}"
 LINE+="${SEP}"
-LINE+="${MUTED}ctx${NC} ${BAR} ${MUTED}${CTX_PERCENT}%${NC}"
-LINE+=" ${MUTED}(${USED_FMT}/${SIZE_FMT}${NC}"
-LINE+=" ${MUTED}|${NC} ${SECONDARY}cache: ${CACHE_READ_FMT}↓ ${CACHE_CREATE_FMT}↑${NC}${MUTED})${NC}"
+LINE+="${BAR} ${WHITE}${CTX_PERCENT}%${NC}"
+LINE+=" ${MUTED}(${USED_FMT}/${SIZE_FMT})${NC}"
+# Rate limit with reset time
+RATE_STR="${WHITE}  ${RATE_5H}%${NC}"
+if [ "$RATE_5H_RESET" -gt 0 ] 2>/dev/null; then
+  NOW=$(date +%s)
+  REMAINING=$((RATE_5H_RESET - NOW))
+  if [ "$REMAINING" -gt 0 ]; then
+    HOURS=$((REMAINING / 3600))
+    MINS=$(((REMAINING % 3600) / 60))
+    if [ "$HOURS" -gt 0 ]; then
+      RATE_STR+=" ${MUTED}(reset ${HOURS}h ${MINS}m)${NC}"
+    else
+      RATE_STR+=" ${MUTED}(reset ${MINS}m)${NC}"
+    fi
+  fi
+fi
+LINE+="${SEP}"
+LINE+="${RATE_STR}"
 
 echo -e "${LINE}\033[K"
