@@ -92,6 +92,11 @@ return {
   -- Description: Collection of small QoL plugins for Neovim
   -- Configured for elegant UI with minimal visual noise
   {
+    "sphamba/smear-cursor.nvim",
+    opts = {},
+  },
+
+  {
     "folke/snacks.nvim",
     opts = {
       dashboard = {
