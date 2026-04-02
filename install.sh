@@ -228,11 +228,24 @@ create_symlinks() {
     ln -sf "$DOTFILES_DIR/config/tmux/keybindings.conf" "$HOME/.config/tmux/keybindings.conf"
     success "Linked tmux config"
 
-    # ~/.config/lazygit
-    mkdir -p "$HOME/.config/lazygit"
-    backup_if_exists "$HOME/.config/lazygit/config.yml"
-    ln -sf "$DOTFILES_DIR/config/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
+    # lazygit config (different path on macOS vs Linux)
+    if [[ "$OS" == "macos" ]]; then
+        local lazygit_dir="$HOME/Library/Application Support/lazygit"
+    else
+        local lazygit_dir="$HOME/.config/lazygit"
+    fi
+    mkdir -p "$lazygit_dir"
+    backup_if_exists "$lazygit_dir/config.yml"
+    ln -sf "$DOTFILES_DIR/config/lazygit/config.yml" "$lazygit_dir/config.yml"
     success "Linked lazygit config"
+
+    # ~/.config/ghostty (macOS only)
+    if [[ "$OS" == "macos" ]]; then
+        mkdir -p "$HOME/.config/ghostty"
+        backup_if_exists "$HOME/.config/ghostty/config"
+        ln -sf "$DOTFILES_DIR/config/ghostty/config" "$HOME/.config/ghostty/config"
+        success "Linked ghostty config"
+    fi
 
     # ~/.wezterm.lua (Windows/WSL only)
     if [[ "$OS" != "macos" ]]; then
