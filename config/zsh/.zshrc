@@ -92,10 +92,17 @@ alias glog="git log --oneline --graph --decorate"
 # -------------------------------------------
 # Aliases - General
 # -------------------------------------------
-alias ls="ls --color=auto"
-alias ll="ls -la --color=auto"
-alias la="ls -A --color=auto"
-alias l="ls -CF --color=auto"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ls="ls -G"
+    alias ll="ls -laG"
+    alias la="ls -AG"
+    alias l="ls -CFG"
+else
+    alias ls="ls --color=auto"
+    alias ll="ls -la --color=auto"
+    alias la="ls -A --color=auto"
+    alias l="ls -CF --color=auto"
+fi
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -122,8 +129,10 @@ if [[ -f "$HOME/.zshrc.local" ]]; then
     source "$HOME/.zshrc.local"
 fi
 
-# opencode
-export PATH=/home/alex/.opencode/bin:$PATH
+# opencode (Linux/WSL only)
+if [[ "$OSTYPE" != "darwin"* ]]; then
+    export PATH=/home/alex/.opencode/bin:$PATH
+fi
 
 # Claude Code
 export PATH="$HOME/.local/bin:$PATH"
