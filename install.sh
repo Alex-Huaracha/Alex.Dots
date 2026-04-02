@@ -160,8 +160,7 @@ install_tpm() {
     # Install tmux plugins automatically
     if [[ -x "$TPM_DIR/bin/install_plugins" ]]; then
         info "Installing tmux plugins..."
-        "$TPM_DIR/bin/install_plugins"
-        success "Tmux plugins installed"
+        "$TPM_DIR/bin/install_plugins" || warn "TPM plugins will install on first tmux launch"
     fi
 }
 
@@ -235,10 +234,12 @@ create_symlinks() {
     ln -sf "$DOTFILES_DIR/config/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
     success "Linked lazygit config"
 
-    # ~/.wezterm.lua
-    backup_if_exists "$HOME/.wezterm.lua"
-    ln -sf "$DOTFILES_DIR/config/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
-    success "Linked wezterm.lua"
+    # ~/.wezterm.lua (Windows/WSL only)
+    if [[ "$OS" != "macos" ]]; then
+        backup_if_exists "$HOME/.wezterm.lua"
+        ln -sf "$DOTFILES_DIR/config/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+        success "Linked wezterm.lua"
+    fi
 
     # ~/.claude (Claude Code)
     mkdir -p "$HOME/.claude"
@@ -319,14 +320,19 @@ show_summary() {
     echo ""
     echo -e "${BOLD}${GREEN}Installation complete!${NC}"
     echo ""
-    echo "What was installed:"
-    echo "  - Homebrew (package manager)"
-    echo "  - Zsh (shell) + plugins"
-    echo "  - Starship (prompt)"
-    echo "  - Tmux + TPM (plugin manager)"
-    echo "  - fnm (Node version manager)"
-    echo "  - Node.js LTS"
-    echo "  - Git"
+    echo "What was configured:"
+    if [[ "$INSTALL_METHOD" == "brew" ]]; then
+        echo "  - Homebrew (package manager)"
+        echo "  - Packages from Brewfile"
+    else
+        echo "  - Packages: skipped (manual mode)"
+    fi
+    echo "  - Zsh plugins (autosuggestions, syntax-highlighting)"
+    echo "  - TPM (Tmux Plugin Manager)"
+    if command_exists fnm; then
+        echo "  - Node.js LTS (via fnm)"
+    fi
+    echo "  - Git user config"
     echo ""
     echo "Symlinks created:"
     echo "  - ~/.zshrc -> $DOTFILES_DIR/config/zsh/.zshrc"
@@ -342,14 +348,42 @@ show_summary() {
 }
 
 # ============================================
+# Ask user about package installation method
+# ============================================
+ask_install_method() {
+    echo ""
+    echo -e "${BOLD}How do you want to install packages?${NC}"
+    echo "  1) Homebrew (install from Brewfile)"
+    echo "  2) Skip (I'll install packages manually)"
+    echo ""
+    read -p "Choose [1/2]: " install_choice
+
+    case "$install_choice" in
+        1)
+            INSTALL_METHOD="brew"
+            ;;
+        *)
+            INSTALL_METHOD="skip"
+            ;;
+    esac
+}
+
+# ============================================
 # Main
 # ============================================
 main() {
     show_banner
     detect_os
-    update_system
-    install_homebrew
-    install_packages
+    ask_install_method
+
+    if [[ "$INSTALL_METHOD" == "brew" ]]; then
+        update_system
+        install_homebrew
+        install_packages
+    else
+        warn "Skipping package installation (manual mode)"
+    fi
+
     install_zsh_plugins
     install_tpm
     install_node
