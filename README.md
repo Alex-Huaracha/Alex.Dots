@@ -1,121 +1,62 @@
 # Alex.Dots
 
-Personal dotfiles for macOS and Linux/WSL.
+Personal dotfiles for macOS and Linux/WSL. One installer, symlinks, done.
 
-## What's Included
+## What's included
 
-- **Zsh** - Shell with plugins (autosuggestions, syntax-highlighting)
-- **Starship** - Minimal, fast prompt
-- **fnm** - Fast Node Manager
-- **Git** - Version control configuration
+| Tool | Description |
+|------|-------------|
+| Zsh | Shell + autosuggestions + syntax-highlighting |
+| Starship | Cross-shell prompt |
+| Neovim | LazyVim-based config |
+| Tmux | Terminal multiplexer (prefix: `Ctrl+a`) |
+| WezTerm | Terminal emulator (WSL only) |
+| Lazygit | Git TUI |
+| fnm | Node.js version manager |
+| Claude Code | AI assistant config |
 
-## Quick Start
+## Prerequisites
+
+- **Git** installed
+- **Homebrew** (optional — the installer can set it up, or you can install packages manually)
+- On older Intel Macs without Homebrew bottles, see [MACOS_INTEL_SETUP.md](MACOS_INTEL_SETUP.md) for direct binary installs
+
+## Installation
 
 ```bash
-# Clone the repo
-git clone https://github.com/YOUR_USERNAME/Alex.Dots.git ~/.dotfiles
-
-# Run the installer
-cd ~/.dotfiles
+git clone https://github.com/<your-user>/Alex.Dots.git
+cd Alex.Dots
 ./install.sh
 ```
 
-## What the Installer Does
-
-1. Detects your OS (macOS, Linux, or WSL)
-2. Updates system packages (Linux/WSL only)
-3. Installs Homebrew (if not present)
-4. Installs packages from `Brewfile`
-5. Installs Zsh plugins
-6. Installs Node.js LTS via fnm
-7. Creates symlinks for all configs
-8. Configures Git (asks for name/email)
-9. Changes default shell to Zsh
+The installer will ask if you want to install packages via Homebrew or skip and only create symlinks/configs.
 
 ## Structure
 
 ```
-Alex.Dots/
-├── install.sh                # Main installer (orchestrator)
-├── Brewfile                  # Homebrew packages
-├── scripts/
-│   └── utils.sh              # Shared functions
-├── config/
-│   ├── zsh/
-│   │   ├── .zshrc            # Zsh configuration
-│   │   └── install.sh        # Zsh installer
-│   ├── starship/
-│   │   ├── starship.toml     # Prompt configuration
-│   │   └── install.sh        # Starship installer
-│   ├── git/
-│   │   ├── .gitconfig.local  # Git configuration (shared)
-│   │   └── install.sh        # Git installer
-│   └── node/
-│       └── install.sh        # Node.js installer
-└── README.md
+config/
+  zsh/          # .zshrc (aliases, history, plugins)
+  starship/     # starship.toml (prompt theme)
+  nvim/         # LazyVim config (plugins, keymaps, options)
+  tmux/         # tmux.conf + keybindings.conf
+  wezterm/      # wezterm.lua (WSL only)
+  lazygit/      # config.yml
+  git/          # .gitconfig.local (shared git settings)
+  claude-code/  # settings.json, statusline.sh, CLAUDE.md
+Brewfile        # Homebrew packages
+install.sh      # Idempotent installer
 ```
 
-Each config has its own `install.sh` that can be run independently.
+All configs get symlinked to their expected locations (`~/.zshrc`, `~/.config/nvim/`, etc.). Existing files are backed up with a timestamp before symlinking.
 
-## Symlinks Created
+## Git config
 
-| Source | Destination |
-|--------|-------------|
-| `config/zsh/.zshrc` | `~/.zshrc` |
-| `config/starship/starship.toml` | `~/.config/starship.toml` |
-| `config/git/.gitconfig.local` | `~/.gitconfig.local` |
+`~/.gitconfig` is created by the installer (not tracked) and holds your name/email. It includes `~/.gitconfig.local` which is the tracked file with shared settings (editor, merge style, push behavior, colors).
 
-## Git Configuration
+If you already have a `~/.gitconfig`, the installer will back it up and create a new one with the include. On first run it will ask for your name and email.
 
-The installer creates `~/.gitconfig` with your name/email and includes the shared config:
+## Adding a new config
 
-```gitconfig
-[user]
-    name = Your Name
-    email = your@email.com
-
-[include]
-    path = ~/.gitconfig.local
-```
-
-This way your personal info stays out of the repo.
-
-## Local Overrides
-
-Add machine-specific config to `~/.zshrc.local` (not tracked in git).
-
-## Updating
-
-```bash
-cd ~/.dotfiles
-git pull
-```
-
-The symlinks will automatically point to the updated files.
-
-## Aliases
-
-### Node/npm
-| Alias | Command |
-|-------|---------|
-| `ni` | `npm install` |
-| `nr` | `npm run` |
-| `nrd` | `npm run dev` |
-| `nrb` | `npm run build` |
-
-### General
-| Alias | Command |
-|-------|---------|
-| `v` | `nvim` |
-| `ll` | `ls -la` |
-| `..` | `cd ..` |
-
-## Requirements
-
-- macOS, Linux, or WSL
-- `curl` (for Homebrew installation)
-- `git` (will be installed if missing)
-
-## License
-
-MIT
+1. Create `config/<tool>/` with your config files
+2. Add the symlink in `create_symlinks()` in `install.sh`
+3. Add brew dependencies to `Brewfile` if applicable
