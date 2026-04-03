@@ -7,7 +7,17 @@ return {
     opts = {
       flavour = "mocha",
       transparent_background = true,
+      custom_highlights = function()
+        return {
+          NormalFloat = { bg = "NONE" },
+          FloatBorder = { bg = "NONE" },
+        }
+      end,
     },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
+    end,
   },
 
   {
