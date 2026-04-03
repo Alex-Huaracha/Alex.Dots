@@ -16,7 +16,8 @@ font-size = 14
 # │                                  WINDOW                                      │
 # └──────────────────────────────────────────────────────────────────────────────┘
 
-background-opacity = 0.95
+background = 06080f
+background-opacity = 0.75
 background-blur-radius = 20
 
 window-decoration = true
