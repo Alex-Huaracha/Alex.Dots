@@ -17,9 +17,7 @@ config.font_size = 11.0
 -- │                                  WINDOW                                      │
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
--- config.window_background_opacity = 0.95
-config.window_background_opacity = 0.70
-config.macos_window_background_blur = 20
+config.window_background_opacity = 0.75
 config.win32_system_backdrop = "Acrylic"
 
 config.window_padding = {
@@ -29,7 +27,6 @@ config.window_padding = {
 	bottom = 0,
 }
 
-config.enable_scroll_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -37,9 +34,6 @@ config.hide_tab_bar_if_only_one_tab = true
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
 config.default_cursor_style = "SteadyBlock"
-config.cursor_blink_rate = 500
-config.cursor_blink_ease_in = "Constant"
-config.cursor_blink_ease_out = "Constant"
 
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
 -- │                            NEOVIM OPTIMIZATIONS                              │
@@ -67,52 +61,14 @@ config.max_fps = 240
 -- Image support
 config.enable_kitty_graphics = true
 
--- Input handling
 config.use_dead_keys = false
-config.send_composed_key_when_left_alt_is_pressed = false
-config.send_composed_key_when_right_alt_is_pressed = false
 
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
 -- │                              THEME COLORS                                    │
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
 config.colors = {
-	-- Base Colors
-	foreground = "#f3f6f9",
 	background = "#06080f",
-
-	-- Cursor
-	cursor_bg = "#e0c15a",
-	cursor_fg = "#06080f",
-	cursor_border = "#e0c15a",
-
-	-- Selection
-	selection_fg = "#f3f6f9",
-	selection_bg = "#263356",
-
-	-- Normal Colors
-	ansi = {
-		"#06080f", -- black
-		"#cb7c94", -- red
-		"#b7cc85", -- green
-		"#ffe066", -- yellow
-		"#7fb4ca", -- blue
-		"#ff8dd7", -- magenta
-		"#7aa89f", -- cyan
-		"#f3f6f9", -- white
-	},
-
-	-- Bright Colors
-	brights = {
-		"#8a8fa3", -- black
-		"#de8fa8", -- red
-		"#d1e8a9", -- green
-		"#fff7b1", -- yellow
-		"#a3d4d5", -- blue
-		"#ffaeea", -- magenta
-		"#7fb4ca", -- cyan
-		"#f3f6f9", -- white
-	},
 }
 
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -121,5 +77,22 @@ config.colors = {
 
 config.default_domain = "WSL:Ubuntu"
 config.front_end = "OpenGL"
+
+local act = wezterm.action
+
+config.keys = {
+	{ key = "v", mods = "ALT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "d", mods = "ALT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+
+	{ key = "h", mods = "ALT", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "ALT", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "ALT", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "ALT", action = act.ActivatePaneDirection("Right") },
+
+	{ key = "h", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Left", 10 }) },
+	{ key = "j", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Down", 10 }) },
+	{ key = "k", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Up", 10 }) },
+	{ key = "l", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Right", 10 }) },
+}
 
 return config
