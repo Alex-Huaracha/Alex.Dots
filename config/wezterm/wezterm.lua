@@ -18,7 +18,7 @@ config.font_size = 11.0
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
 -- config.window_background_opacity = 0.95
-config.window_background_opacity = 0.60
+config.window_background_opacity = 0.70
 config.macos_window_background_blur = 20
 config.win32_system_backdrop = "Acrylic"
 
@@ -52,7 +52,7 @@ if wezterm.target_triple:find("windows") then
 else
 	config.term = "wezterm"
 end
-config.enable_csi_u_key_encoding = true
+config.enable_kitty_keyboard = true
 
 -- Undercurl support (LSP diagnostics, spelling)
 config.underline_thickness = 2
