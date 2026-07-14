@@ -31,9 +31,9 @@ All configs live under `config/` and get symlinked to their expected locations b
 | `config/lazygit/config.yml` | `~/.config/lazygit/config.yml` (macOS: `~/Library/Application Support/lazygit/config.yml`) |
 | `config/ghostty/config` | `~/.config/ghostty/config` (macOS only) |
 | `config/wezterm/wezterm.lua` | `~/.wezterm.lua` (non-macOS only) |
-| `config/claude-code/settings.json` | `~/.claude/settings.json` |
 | `config/claude-code/statusline.sh` | `~/.claude/statusline.sh` |
-| `config/claude-code/CLAUDE.md` | `~/.claude/CLAUDE.md` |
+
+Claude Code's `settings.json` and global `CLAUDE.md` are managed by `gentle-ai` in `~/.claude` and are intentionally NOT tracked here — only `statusline.sh` (which gentle-ai does not provide) lives in this repo.
 
 When adding a new config: add the files under `config/<tool>/`, then add a `link` line to the `create_symlinks()` function in `link.sh`.
 

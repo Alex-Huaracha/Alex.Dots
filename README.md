@@ -14,7 +14,7 @@ Personal config files for macOS and Linux/WSL. Just configs — one script to sy
 | Ghostty | Terminal emulator (macOS) |
 | Lazygit | Git TUI |
 | Git | Shared settings (`.gitconfig.local`) |
-| Claude Code | `settings.json`, `statusline.sh`, `CLAUDE.md` |
+| Claude Code | `statusline.sh` (settings + instructions are managed by gentle-ai) |
 
 ## Usage
 
@@ -40,7 +40,7 @@ config/
   ghostty/      # config (macOS)
   lazygit/      # config.yml
   git/          # .gitconfig.local
-  claude-code/  # settings.json, statusline.sh, CLAUDE.md
+  claude-code/  # statusline.sh
 link.sh         # symlinks configs into place
 ```
 

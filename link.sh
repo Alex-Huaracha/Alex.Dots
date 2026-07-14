@@ -100,10 +100,9 @@ create_symlinks() {
         link "$DOTFILES_DIR/config/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
     fi
 
-    # Claude Code
-    link "$DOTFILES_DIR/config/claude-code/settings.json"  "$HOME/.claude/settings.json"
+    # Claude Code — only statusline.sh; settings.json and CLAUDE.md are
+    # owned by gentle-ai and live in ~/.claude, not here.
     link "$DOTFILES_DIR/config/claude-code/statusline.sh"  "$HOME/.claude/statusline.sh"
-    link "$DOTFILES_DIR/config/claude-code/CLAUDE.md"      "$HOME/.claude/CLAUDE.md"
 }
 
 # ============================================
