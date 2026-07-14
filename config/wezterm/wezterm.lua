@@ -4,21 +4,20 @@
 -- ╚══════════════════════════════════════════════════════════════════════════════╝
 
 local wezterm = require("wezterm")
-local config = {}
+local config = wezterm.config_builder()
 
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
 -- │                                   FONT                                       │
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
-config.font = wezterm.font("IosevkaTerm NF")
-config.font_size = 11.0
+config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font_size = 10.0
 
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
 -- │                                  WINDOW                                      │
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
-config.window_background_opacity = 0.75
-config.win32_system_backdrop = "Acrylic"
+config.window_background_opacity = 0.95
 
 config.window_padding = {
 	top = 0,
@@ -63,20 +62,22 @@ config.enable_kitty_graphics = true
 
 config.use_dead_keys = false
 
+-- Keep long lines intact when copying (no fake newlines at wrap points)
+config.canonicalize_pasted_newlines = "None"
+
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
 -- │                              THEME COLORS                                    │
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
-config.colors = {
-	background = "#06080f",
-}
+-- Full palette (foreground + 16 ANSI colors). Swap for any builtin scheme:
+-- https://wezterm.org/colorschemes/index.html
+config.color_scheme = "Kanagawa (Gogh)"
 
 -- ┌──────────────────────────────────────────────────────────────────────────────┐
 -- │                              WINDOWS (WSL)                                   │
 -- └──────────────────────────────────────────────────────────────────────────────┘
 
 config.default_domain = "WSL:Ubuntu"
-config.front_end = "OpenGL"
 
 local act = wezterm.action
 
