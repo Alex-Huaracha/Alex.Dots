@@ -4,21 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Personal dotfiles repository for macOS and Linux/WSL. Manages shell, editor, terminal, and tool configurations via a single idempotent installer that uses Homebrew and symlinks.
+Personal config repository for macOS and Linux/WSL. It holds shell, editor, terminal, and tool configs — nothing else. A single script (`link.sh`) symlinks them into place. It does not install packages, plugins, or runtimes; provisioning each machine is done by hand.
 
-## Installation
+## Setup
 
 ```bash
-./install.sh
+./link.sh
 ```
 
-The installer is idempotent — it detects the OS (macOS/Linux/WSL), installs Homebrew and Brewfile packages, clones zsh plugins, installs TPM + tmux plugins, sets up Node.js via fnm, creates symlinks, configures git user info, and sets zsh as default shell. Existing files are backed up with a timestamp before symlinking.
+`link.sh` detects the OS (macOS/Linux/WSL) and creates every symlink, backing up any existing real file with a timestamp first. It is idempotent — safe to re-run. It also ensures `~/.gitconfig` includes the tracked `~/.gitconfig.local`. That is all it does.
 
 ## Architecture
 
 ### Symlink-based config management
 
-All configs live under `config/` and get symlinked to their expected locations by `install.sh`. There are no per-config install scripts — the root `install.sh` is the sole orchestrator.
+All configs live under `config/` and get symlinked to their expected locations by `link.sh`. There are no per-config scripts — `link.sh` is the sole entry point.
 
 | Source | Symlink Target |
 |--------|---------------|
@@ -28,16 +28,18 @@ All configs live under `config/` and get symlinked to their expected locations b
 | `config/nvim/` | `~/.config/nvim/` |
 | `config/tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 | `config/tmux/keybindings.conf` | `~/.config/tmux/keybindings.conf` |
-| `config/lazygit/config.yml` | `~/.config/lazygit/config.yml` |
-| `config/wezterm/wezterm.lua` | `~/.wezterm.lua` |
+| `config/lazygit/config.yml` | `~/.config/lazygit/config.yml` (macOS: `~/Library/Application Support/lazygit/config.yml`) |
+| `config/ghostty/config` | `~/.config/ghostty/config` (macOS only) |
+| `config/wezterm/wezterm.lua` | `~/.wezterm.lua` (non-macOS only) |
 | `config/claude-code/settings.json` | `~/.claude/settings.json` |
 | `config/claude-code/statusline.sh` | `~/.claude/statusline.sh` |
+| `config/claude-code/CLAUDE.md` | `~/.claude/CLAUDE.md` |
 
-When adding a new config: add the files under `config/<tool>/`, then add the symlink creation to the `create_symlinks()` function in `install.sh`, and add any new brew packages to `Brewfile`.
+When adding a new config: add the files under `config/<tool>/`, then add a `link` line to the `create_symlinks()` function in `link.sh`.
 
 ### Git config split
 
-`~/.gitconfig` (created by installer, not tracked) holds user name/email and includes `~/.gitconfig.local`. The tracked `.gitconfig.local` holds shared settings (editor, merge style, push behavior, colors). Personal info stays out of the repo.
+`~/.gitconfig` (not tracked) holds user name/email and includes `~/.gitconfig.local`. The tracked `.gitconfig.local` holds shared settings (editor, merge style, push behavior, colors). Personal info stays out of the repo. Set your identity per machine with `git config --global user.name/user.email`.
 
 ### Neovim
 
@@ -45,13 +47,13 @@ Based on LazyVim. Plugin configs are in `config/nvim/lua/plugins/` (one file per
 
 ### Tmux
 
-Uses TPM for plugin management. `tmux.conf` loads plugins first, then sources `keybindings.conf` at the end to allow overriding plugin defaults. Prefix is `Ctrl+a`.
+Uses TPM for plugin management. `tmux.conf` loads plugins first, then sources `keybindings.conf` at the end to allow overriding plugin defaults. Prefix is `Ctrl+a`. TPM and plugins are installed manually (not by `link.sh`).
 
 ### Zsh
 
-Sources `~/.zshrc.local` at the end for machine-specific overrides (not tracked). Plugins (autosuggestions, syntax-highlighting) are cloned to `~/.zsh/` by the installer.
+Sources `~/.zshrc.local` at the end for machine-specific overrides (not tracked). Plugins (autosuggestions, syntax-highlighting) are expected under `~/.zsh/` and installed manually.
 
 ## Conventions
 
 - **Commit messages**: Use conventional commits with scope — `feat(zsh):`, `fix(nvim):`, `refactor(tmux):`, `chore(nvim):`, `style(tmux):`. Scope is the tool/config area being changed.
-- **New tool configs**: Create `config/<tool>/` directory, add symlink in `create_symlinks()`, add brew dependency in `Brewfile` if applicable.
+- **New tool configs**: Create `config/<tool>/` directory, then add a `link` line in `create_symlinks()` in `link.sh`.
